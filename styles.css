@@ -1,4 +1,4 @@
-/* 16:9; smooth triangular red digits; bigger 21:45 badge; full page reset */
+/* 16:9; perfectly smooth rounded segments; big 21:45 badge; toggles; reset */
 :root{
   --bg:#000;
   --panel:#060606;
@@ -6,7 +6,7 @@
   --ink:#d6d6d6;
   --muted:#8a8a8a;
   --led-red:#ff2e2e;
-  --led-dim:#1a0303;
+  --led-dim:#180303;
   --digit-h: clamp(200px, 50vmin, 64vmin);
   --gap: clamp(10px, 4.2vmin, 34px);
 }
@@ -66,11 +66,8 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
   shape-rendering: geometricPrecision;
 }
 
-/* Smooth triangular segments (no micro gaps) */
-.segment{
-  fill: var(--led-dim);
-  transition: fill .06s linear;
-}
+/* Rounded capsule segments (ultra smooth) */
+.segment{ fill: var(--led-dim); transition: fill .06s linear; }
 .segment.lit{ fill: var(--led-red); }
 
 .separator{ display:grid; place-items:center; }
@@ -95,8 +92,8 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
   padding:12px 14px; background:#050505; border:1px solid #1a1a1a; border-radius:10px;
   color:#ffbcbc; user-select:none;
   transform-origin: top left;
-  transform: scale(0.80); /* was 0.50 -> bigger */
+  transform: scale(0.90); /* even bigger */
 }
-.badge-line{ display:flex; gap:10px; align-items:center; font-size:80px; color:#ff8f8f; }
+.badge-line{ display:flex; gap:10px; align-items:center; font-size:90px; color:#ff8f8f; }
 .badge-time{ font-weight:800; letter-spacing:.5px; }
-.badge-mins{ font-weight:800; font-size:112px; letter-spacing:.5px; color:#ff2e2e; }
+.badge-mins{ font-weight:800; font-size:126px; letter-spacing:.5px; color:#ff2e2e; }
