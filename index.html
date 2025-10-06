@@ -11,6 +11,15 @@
 </head>
 <body>
   <div class="stage">
+    <!-- Top-left minutes-to-21:45 badge -->
+    <aside class="deadline-badge" aria-live="polite">
+      <div class="badge-line">
+        <span class="badge-label">Tot</span>
+        <span class="badge-time">21:45</span>
+      </div>
+      <div class="badge-mins"><span id="badge-mins-val">--</span> min</div>
+    </aside>
+
     <main class="shell" role="application">
       <header class="bar">
         <h1 class="brand">Countdown</h1>
@@ -33,6 +42,12 @@
           </label>
         </div>
 
+        <div class="group toggles" role="group" aria-label="Eenheden tonen/verbergen">
+          <label class="switch"><input id="toggle-minutes" type="checkbox" checked> <span>Minuten tonen</span></label>
+          <label class="switch"><input id="toggle-seconds" type="checkbox" checked> <span>Seconden tonen</span></label>
+          <label class="switch"><input id="toggle-hundredths" type="checkbox" checked> <span>Honderdsten tonen</span></label>
+        </div>
+
         <div class="group cta">
           <button id="btn-start" class="btn primary">Start</button>
           <button id="btn-pause" class="btn">Pauze</button>
@@ -48,7 +63,7 @@
       </section>
 
       <footer class="bar foot">
-        <p>16:9 canvas · LED rood display</p>
+        <p>16:9 canvas · LED rood display · Minuten-badge tot 21:45</p>
       </footer>
     </main>
   </div>
