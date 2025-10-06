@@ -1,4 +1,4 @@
-/* Fullscreen 16:9; thicker red LED segments; unit toggles; 21:45 badge */
+/* 16:9; triangular red digits like example; badge at 50% of main */
 :root{
   --bg:#000;
   --panel:#060606;
@@ -6,9 +6,9 @@
   --ink:#d6d6d6;
   --muted:#8a8a8a;
   --led-red:#ff2e2e;
-  --led-dim:#230606;
-  --digit-h: clamp(180px, 46vmin, 60vmin); /* balanced: not oversized */
-  --gap: clamp(10px, 3.6vmin, 28px);
+  --led-dim:#1b0404;
+  --digit-h: clamp(200px, 50vmin, 64vmin);
+  --gap: clamp(10px, 4.2vmin, 34px);
 }
 
 *{box-sizing:border-box}
@@ -62,35 +62,34 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
 }
 .digit{ height: var(--digit-h); width:auto; }
 
-/* Thicker segments using purpose-built polygons (flat red) */
+/* Triangular thick segments (flat red) */
 .segment{ fill: var(--led-dim); transition: fill .06s linear; }
 .segment.lit{ fill: var(--led-red); }
 
 .separator{ display:grid; place-items:center; }
-.sep-colon{ display:grid; gap: clamp(10px, 3.6vmin, 40px); }
+.sep-colon{ display:grid; gap: clamp(12px, 4.8vmin, 44px); }
 .sep-circle{
-  width: clamp(12px, 4.2vmin, 34px);
-  height: clamp(12px, 4.2vmin, 34px);
+  width: clamp(14px, 5.2vmin, 36px);
+  height: clamp(14px, 5.2vmin, 36px);
   border-radius:50%; background: var(--led-red);
 }
 
 /* Dot + hundredths */
-.sep-dot{ display:grid; place-items:center; margin-left: calc(var(--gap) * 0.6); }
+.sep-dot{ display:grid; place-items:center; margin-left: calc(var(--gap) * 0.7); }
 .dot-rect{
-  width: clamp(14px, 4.8vmin, 36px);
-  height: clamp(14px, 4.8vmin, 36px);
+  width: clamp(16px, 5.4vmin, 38px);
+  height: clamp(16px, 5.4vmin, 38px);
   border-radius:50%; background: var(--led-red);
 }
 
-/* Badge top-left (≈10% size of main) */
+/* Badge at 50% of main (scaled) */
 .deadline-badge{
   position:fixed; top:10px; left:10px; z-index:5;
-  padding:6px 8px; background:#050505; border:1px solid #1a1a1a; border-radius:10px;
+  padding:10px 12px; background:#050505; border:1px solid #1a1a1a; border-radius:10px;
   color:#ffbcbc; user-select:none;
   transform-origin: top left;
-  /* 10% of main digit height */
-  transform: scale(0.10);
+  transform: scale(0.50);
 }
-.badge-line{ display:flex; gap:6px; align-items:center; font-size:32px; color:#ff8f8f; }
+.badge-line{ display:flex; gap:6px; align-items:center; font-size:64px; color:#ff8f8f; }
 .badge-time{ font-weight:800; letter-spacing:.5px; }
-.badge-mins{ font-weight:800; font-size:46px; letter-spacing:.5px; color:#ff2e2e; }
+.badge-mins{ font-weight:800; font-size:92px; letter-spacing:.5px; color:#ff2e2e; }

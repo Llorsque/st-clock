@@ -1,4 +1,4 @@
-// Fullscreen LED countdown — thicker segments; unit toggles; 21:45 minutes badge
+// LED countdown — triangular segments; unit toggles; 21:45 minutes badge @ 50%
 const screen = document.getElementById('screen');
 const inputMinutes = document.getElementById('input-minutes');
 const inputSeconds = document.getElementById('input-seconds');
@@ -26,28 +26,34 @@ const SEGMENTS = {
   '9': [1,1,1,1,0,1,1],
 };
 
-/* Thicker-segment geometry (wider bars & bevels) */
+/* Triangular thick segment geometry (with sharp diagonal ends) */
 function createDigit() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute('viewBox','0 0 120 200'); // bigger canvas for thicker segments
+  svg.setAttribute('viewBox','0 0 140 220');
   svg.classList.add('digit');
 
-  const t = 26; // thickness
-  const o = 12; // outer margin
-  const w = 120 - 2*o;
-  const h = 200 - 2*o;
-  const bevel = 10;
+  const t = 34;   // thickness
+  const o = 12;   // margin
+  const W = 140 - 2*o;
+  const H = 220 - 2*o;
+  const mid = o + H/2;
+  const b = 18;   // bevel length
 
   const polys = {
-    // Horizontal segments
-    a: `${o+bevel},${o} ${o+w-bevel},${o} ${o+w-bevel-t/2},${o+t} ${o+bevel+t/2},${o+t}`,
-    d: `${o+bevel},${o+h-t} ${o+w-bevel},${o+h-t} ${o+w-bevel-t/2},${o+h} ${o+bevel+t/2},${o+h}`,
-    g: `${o+bevel},${o+h/2 - t/2} ${o+w-bevel},${o+h/2 - t/2} ${o+w-bevel-t/2},${o+h/2 + t/2} ${o+bevel+t/2},${o+h/2 + t/2}`,
-    // Vertical segments
-    b: `${o+w-t},${o+bevel} ${o+w},${o+bevel+t/2} ${o+w},${o+h/2 - bevel} ${o+w-t},${o+h/2 - bevel - t/2} ${o+w-t},${o+bevel}`,
-    c: `${o+w-t},${o+h/2 + bevel + t/2} ${o+w},${o+h/2 + bevel} ${o+w},${o+h - bevel - t/2} ${o+w-t},${o+h - bevel - t} ${o+w-t},${o+h/2 + bevel + t/2}`,
-    f: `${o},${o+bevel+t/2} ${o+t},${o+bevel} ${o+t},${o+h/2 - bevel - t/2} ${o},${o+h/2 - bevel} ${o},${o+bevel+t/2}`,
-    e: `${o},${o+h/2 + bevel} ${o+t},${o+h/2 + bevel + t/2} ${o+t},${o+h - bevel} ${o},${o+h - bevel - t/2} ${o},${o+h/2 + bevel}`
+    // top horizontal (a)
+    a: `${o+b},${o} ${o+W-b},${o} ${o+W-b-t/2},${o+t} ${o+b+t/2},${o+t}`,
+    // middle horizontal (g)
+    g: `${o+b},${mid - t/2} ${o+W-b},${mid - t/2} ${o+W-b-t/2},${mid + t/2} ${o+b+t/2},${mid + t/2}`,
+    // bottom horizontal (d)
+    d: `${o+b},${o+H-t} ${o+W-b},${o+H-t} ${o+W-b-t/2},${o+H} ${o+b+t/2},${o+H}`,
+    // top-right vertical (b)
+    b: `${o+W-t},${o+b} ${o+W},${o+b+t/2} ${o+W},${mid-b} ${o+W-t},${mid-b-t/2}`,
+    // bottom-right vertical (c)
+    c: `${o+W-t},${mid+b+t/2} ${o+W},${mid+b} ${o+W},${o+H-b-t/2} ${o+W-t},${o+H-b}`,
+    // top-left vertical (f)
+    f: `${o},${o+b+t/2} ${o+t},${o+b} ${o+t},${mid-b-t/2} ${o},${mid-b}`,
+    // bottom-left vertical (e)
+    e: `${o},${mid+b} ${o+t},${mid+b+t/2} ${o+t},${o+H-b} ${o},${o+H-b-t/2}`
   };
 
   const segs = {};
@@ -68,7 +74,7 @@ function createDigit() {
       else segs[k].classList.remove('lit');
     });
   };
-  svg._set('0');
+  svg._set('8'); // initialize 'all on' style
   return svg;
 }
 
@@ -204,14 +210,10 @@ function updateUnitVisibility() {
 
   digits[0].style.display = showM ? '' : 'none';
   digits[1].style.display = showM ? '' : 'none';
-
   sepColonEl.style.display = (showM && showS) ? '' : 'none';
-
   digits[2].style.display = showS ? '' : 'none';
   digits[3].style.display = showS ? '' : 'none';
-
   sepDotEl.style.display = (showS && showH) ? '' : 'none';
-
   digits[4].style.display = showH ? '' : 'none';
   digits[5].style.display = showH ? '' : 'none';
 }
