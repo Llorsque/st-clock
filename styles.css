@@ -1,4 +1,4 @@
-/* 16:9; perfectly smooth rounded segments; big 21:45 badge; toggles; reset */
+/* 16:9; rectangular segments; 21:45 badge at 60%; toggles; reset */
 :root{
   --bg:#000;
   --panel:#060606;
@@ -66,7 +66,7 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
   shape-rendering: geometricPrecision;
 }
 
-/* Rounded capsule segments (ultra smooth) */
+/* Rectangular segments (perfectly straight ends) */
 .segment{ fill: var(--led-dim); transition: fill .06s linear; }
 .segment.lit{ fill: var(--led-red); }
 
@@ -86,14 +86,14 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
   border-radius:50%; background: var(--led-red);
 }
 
-/* Bigger badge (left/top) */
+/* Badge at 60% */
 .deadline-badge{
   position:fixed; top:10px; left:10px; z-index:5;
   padding:12px 14px; background:#050505; border:1px solid #1a1a1a; border-radius:10px;
   color:#ffbcbc; user-select:none;
   transform-origin: top left;
-  transform: scale(0.90); /* even bigger */
+  transform: scale(0.60);
 }
-.badge-line{ display:flex; gap:10px; align-items:center; font-size:90px; color:#ff8f8f; }
+.badge-line{ display:flex; gap:10px; align-items:center; font-size:70px; color:#ff8f8f; }
 .badge-time{ font-weight:800; letter-spacing:.5px; }
-.badge-mins{ font-weight:800; font-size:126px; letter-spacing:.5px; color:#ff2e2e; }
+.badge-mins{ font-weight:800; font-size:100px; letter-spacing:.5px; color:#ff2e2e; }

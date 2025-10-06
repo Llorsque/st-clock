@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Countdown — LED (rounded, smooth)</title>
+  <title>Countdown — LED (rectangular) + 21:45 badge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
 </head>
 <body>
   <div class="stage">
-    <!-- Bigger 21:45 minutes badge -->
+    <!-- 21:45 minutes badge (60% of main) -->
     <aside class="deadline-badge" aria-live="polite">
       <div class="badge-line">
         <span class="badge-label">Tot</span>
@@ -33,7 +33,7 @@
             <span>Minuten</span>
             <input id="input-minutes" type="number" min="0" max="999" step="1" value="05" inputmode="numeric" />
           </label>
-          <label class="field">
+        <label class="field">
             <span>Seconden</span>
             <input id="input-seconds" type="number" min="0" max="59" step="1" value="00" inputmode="numeric" />
           </label>

@@ -1,8 +1,11 @@
-# Countdown Timer (16:9) — SMOOTH rounded segments + grote 21:45‑badge
+# Countdown Timer (16:9) — rechthoekige digits + 21:45-badge op 60% + "ceil" minuten
 
-- **Cijferstijl**: segmenten zijn nu *capsule‑vormige* afgeronde rechthoeken (rx = thickness/2). Geen hoekige artefacten of gekartelde randen; helemaal egaal.
-- **Badge**: 21:45‑timer linksboven nog groter (scale 0.90).
-- **Toggles**: minuten/seconden/honderdsten aan/uit; scheidingstekens volgen.
-- **Reset pagina**: één klik op *Reset pagina* herlaadt alles.
+**Wat is nieuw**
+- **Digits** zijn nu **rechthoekig** (rechte einden, geen rondingen of chamfers).
+- **21:45-badge** linksboven staat op **60%** van de hoofdschaal.
+- Minuten tot 21:45 worden **naar boven afgerond**: bijv. **20:45 → 60 min** (want we tellen geen seconden).
+
+Toggles (minuten/seconden/honderdsten) blijven werken; scheidingstekens passen automatisch.
+De knop **Reset pagina** herstart alles schoon.
 
 MIT-licentie.

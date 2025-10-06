@@ -1,4 +1,4 @@
-// LED countdown — rounded capsule segments; unit toggles; big 21:45 minutes badge
+// LED countdown — rectangular segments; 21:45 minutes badge @ 60%; ceil minutes; toggles
 const screen = document.getElementById('screen');
 const inputMinutes = document.getElementById('input-minutes');
 const inputSeconds = document.getElementById('input-seconds');
@@ -27,7 +27,7 @@ const SEGMENTS = {
   '9': [1,1,1,1,0,1,1],
 };
 
-/* Build a digit using rounded rectangles for each segment (rx = t/2) */
+/* Rectangular segment digit using plain rects (rx=0) */
 function createDigit() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox','0 0 140 220');
@@ -38,14 +38,12 @@ function createDigit() {
   const W = 140 - 2*o;
   const H = 220 - 2*o;
   const mid = o + H/2;
-  const rx = t/2;
 
-  // Helper: rounded rect
   function rrect(x,y,w,h){
     const r = document.createElementNS('http://www.w3.org/2000/svg','rect');
     r.setAttribute('x', x); r.setAttribute('y', y);
     r.setAttribute('width', w); r.setAttribute('height', h);
-    r.setAttribute('rx', rx); r.setAttribute('ry', rx);
+    r.setAttribute('rx', 0); r.setAttribute('ry', 0);
     r.classList.add('segment');
     svg.appendChild(r);
     return r;
@@ -218,7 +216,7 @@ toggleMinutes.addEventListener('change', updateUnitVisibility);
 toggleSeconds.addEventListener('change', updateUnitVisibility);
 toggleHundredths.addEventListener('change', updateUnitVisibility);
 
-/* Minutes-to-21:45 badge — always running */
+/* Minutes-to-21:45 badge — always running; minute counts round up (ceil) */
 function nextTarget2145() {
   const now = new Date();
   const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 21, 45, 0, 0);
@@ -230,7 +228,8 @@ function updateBadge() {
   const now = Date.now();
   let diff = badgeTarget.getTime() - now;
   if (diff <= 0) { badgeTarget = nextTarget2145(); diff = badgeTarget.getTime() - now; }
-  const mins = Math.max(0, Math.floor(diff / 60000));
+  // Ceil to include the current not-complete minute (e.g., 20:45 -> 60)
+  const mins = Math.max(0, Math.ceil(diff / 60000));
   badgeMinsVal.textContent = String(mins);
 }
 setInterval(updateBadge, 1000);
