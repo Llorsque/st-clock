@@ -1,57 +1,51 @@
-/* Fullscreen 16:9; huge digits; mm:ss:00; flat red LED like 80s/90s */
+/* Fullscreen 16:9; thicker red LED segments; unit toggles; 21:45 badge */
 :root{
-  --bg:#000;                /* black, like device faceplate */
-  --panel:#050505;
-  --stroke:#161616;
-  --ink:#c7cbd3;
-  --muted:#8a92a8;
-  --led-red:#ff2e2e;        /* bright red segment */
-  --led-dim:#3a0a0a;        /* dim segment surface */
-  --digit-h: clamp(200px, 55vmin, 72vmin); /* massive */
+  --bg:#000;
+  --panel:#060606;
+  --stroke:#141414;
+  --ink:#d6d6d6;
+  --muted:#8a8a8a;
+  --led-red:#ff2e2e;
+  --led-dim:#230606;
+  --digit-h: clamp(180px, 46vmin, 60vmin); /* balanced: not oversized */
+  --gap: clamp(10px, 3.6vmin, 28px);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
-body{
-  margin:0;
-  font-family: 'Archivo', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:var(--ink);
-  background: var(--bg);
-}
+body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); background:var(--bg); }
 
-/* Stage fills viewport; shell keeps 16:9 but maximizes digits */
-.stage{ width:100vw; height:100vh; display:grid; place-items:center; background:#000; }
+.stage{ width:100vw; height:100vh; display:grid; place-items:center; background:#000; position:relative; }
 .shell{
   aspect-ratio:16/9;
   height:min(100vh, calc(100vw * 9 / 16));
   width:min(100vw, calc(100vh * 16 / 9));
   display:grid; grid-template-rows: 1fr auto;
-  gap:12px;
-  padding:16px;
+  gap:12px; padding:16px;
 }
 
-.panel{ border-radius:14px; }
-.display{
-  padding:0;
-  border:1px solid #0f0f0f;
-  background:#000;
-}
+.panel{ border-radius:12px; }
+.display{ padding:0; border:1px solid #0e0e0e; background:#000; }
 
-/* Controls kept minimal */
 .controls{
-  background:#060606;
-  border:1px solid #111;
-  padding:10px 12px;
+  background:#060606; border:1px solid #111; padding:10px 12px;
   display:flex; align-items:end; justify-content:space-between; gap:12px; flex-wrap:wrap;
 }
 .controls .hint{ margin:0; color:#7c7c7c; font-size:12px; }
 .field{ display:grid; gap:6px; }
 .field span{ font-size:12px; color:#9a9a9a; }
 .field input{
-  appearance:textfield; width:140px; padding:12px 12px;
+  appearance:textfield; width:130px; padding:10px 12px;
   background:#0a0a0a; color:#e8e8e8;
   border:1px solid #171717; border-radius:10px; font-weight:700; font-size:18px; outline:none;
 }
+/* toggles */
+.toggles .switch{
+  display:flex; align-items:center; gap:8px; padding:8px 10px;
+  background:#0a0a0a; border:1px solid #171717; border-radius:10px; font-size:13px; color:#dcdcdc;
+}
+.toggles input[type="checkbox"]{ transform: translateY(1px); }
+
 .btn{
   appearance:none; border:none; background:#0b0b0b; color:#e8e8e8;
   padding:12px 16px; font-weight:700; border-radius:10px; border:1px solid #191919; cursor:pointer;
@@ -63,37 +57,40 @@ body{
 .screen{
   height:100%; width:100%;
   display:flex; align-items:center; justify-content:center;
-  gap: clamp(10px, 4vmin, 36px);
+  gap: var(--gap);
   padding: clamp(8px, 3vmin, 24px);
 }
-
-/* scale digits by height, width auto from viewBox */
 .digit{ height: var(--digit-h); width:auto; }
 
-/* segments — flat red (no glow), octagonal ends via polygons */
-.segment{
-  fill: var(--led-dim);
-  transition: fill .06s linear;
-}
+/* Thicker segments using purpose-built polygons (flat red) */
+.segment{ fill: var(--led-dim); transition: fill .06s linear; }
 .segment.lit{ fill: var(--led-red); }
 
-/* Colon (two round LEDs) and dot for hundredths */
 .separator{ display:grid; place-items:center; }
-.sep-colon{ display:grid; gap: clamp(10px, 4vmin, 40px); }
+.sep-colon{ display:grid; gap: clamp(10px, 3.6vmin, 40px); }
 .sep-circle{
-  width: clamp(10px, 3.8vmin, 28px);
-  height: clamp(10px, 3.8vmin, 28px);
-  border-radius:50%;
-  background: var(--led-red);
+  width: clamp(12px, 4.2vmin, 34px);
+  height: clamp(12px, 4.2vmin, 34px);
+  border-radius:50%; background: var(--led-red);
 }
 
-/* trailing .00 */
-.sep-dot{ display:grid; place-items:center; margin-left: clamp(6px, 2vmin, 20px); }
+/* Dot + hundredths */
+.sep-dot{ display:grid; place-items:center; margin-left: calc(var(--gap) * 0.6); }
 .dot-rect{
-  width: clamp(14px, 4.5vmin, 32px);
-  height: clamp(14px, 4.5vmin, 32px);
-  border-radius:50%;
-  background: var(--led-red);
+  width: clamp(14px, 4.8vmin, 36px);
+  height: clamp(14px, 4.8vmin, 36px);
+  border-radius:50%; background: var(--led-red);
 }
-*/
 
+/* Badge top-left (≈10% size of main) */
+.deadline-badge{
+  position:fixed; top:10px; left:10px; z-index:5;
+  padding:6px 8px; background:#050505; border:1px solid #1a1a1a; border-radius:10px;
+  color:#ffbcbc; user-select:none;
+  transform-origin: top left;
+  /* 10% of main digit height */
+  transform: scale(0.10);
+}
+.badge-line{ display:flex; gap:6px; align-items:center; font-size:32px; color:#ff8f8f; }
+.badge-time{ font-weight:800; letter-spacing:.5px; }
+.badge-mins{ font-weight:800; font-size:46px; letter-spacing:.5px; color:#ff2e2e; }

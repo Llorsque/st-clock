@@ -1,10 +1,17 @@
-// Fullscreen LED countdown — mm:ss:00 (hundredths fixed '00'), huge digits
+// Fullscreen LED countdown — thicker segments; unit toggles; 21:45 minutes badge
 const screen = document.getElementById('screen');
 const inputMinutes = document.getElementById('input-minutes');
 const inputSeconds = document.getElementById('input-seconds');
+const inputHundredths = document.getElementById('input-hundredths');
 const btnStart = document.getElementById('btn-start');
 const btnPause = document.getElementById('btn-pause');
 const btnReset = document.getElementById('btn-reset');
+
+const toggleMinutes = document.getElementById('toggle-minutes');
+const toggleSeconds = document.getElementById('toggle-seconds');
+const toggleHundredths = document.getElementById('toggle-hundredths');
+
+const badgeMinsVal = document.getElementById('badge-mins-val');
 
 const SEGMENTS = {
   '0': [1,1,1,1,1,1,0],
@@ -19,19 +26,28 @@ const SEGMENTS = {
   '9': [1,1,1,1,0,1,1],
 };
 
+/* Thicker-segment geometry (wider bars & bevels) */
 function createDigit() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.setAttribute('viewBox','0 0 110 180');
+  svg.setAttribute('viewBox','0 0 120 200'); // bigger canvas for thicker segments
   svg.classList.add('digit');
 
+  const t = 26; // thickness
+  const o = 12; // outer margin
+  const w = 120 - 2*o;
+  const h = 200 - 2*o;
+  const bevel = 10;
+
   const polys = {
-    a: "18,12 92,12 84,20 26,20",
-    b: "92,12 98,18 98,86 90,94 84,86 84,20",
-    c: "90,96 98,104 98,168 92,174 84,166 84,102",
-    d: "18,168 26,160 84,160 92,168 18,168",
-    e: "12,104 20,96 26,102 26,166 18,174 12,168",
-    f: "12,18 18,12 26,20 26,86 20,94 12,86",
-    g: "18,88 26,80 84,80 92,88 84,96 26,96"
+    // Horizontal segments
+    a: `${o+bevel},${o} ${o+w-bevel},${o} ${o+w-bevel-t/2},${o+t} ${o+bevel+t/2},${o+t}`,
+    d: `${o+bevel},${o+h-t} ${o+w-bevel},${o+h-t} ${o+w-bevel-t/2},${o+h} ${o+bevel+t/2},${o+h}`,
+    g: `${o+bevel},${o+h/2 - t/2} ${o+w-bevel},${o+h/2 - t/2} ${o+w-bevel-t/2},${o+h/2 + t/2} ${o+bevel+t/2},${o+h/2 + t/2}`,
+    // Vertical segments
+    b: `${o+w-t},${o+bevel} ${o+w},${o+bevel+t/2} ${o+w},${o+h/2 - bevel} ${o+w-t},${o+h/2 - bevel - t/2} ${o+w-t},${o+bevel}`,
+    c: `${o+w-t},${o+h/2 + bevel + t/2} ${o+w},${o+h/2 + bevel} ${o+w},${o+h - bevel - t/2} ${o+w-t},${o+h - bevel - t} ${o+w-t},${o+h/2 + bevel + t/2}`,
+    f: `${o},${o+bevel+t/2} ${o+t},${o+bevel} ${o+t},${o+h/2 - bevel - t/2} ${o},${o+h/2 - bevel} ${o},${o+bevel+t/2}`,
+    e: `${o},${o+h/2 + bevel} ${o+t},${o+h/2 + bevel + t/2} ${o+t},${o+h - bevel} ${o},${o+h - bevel - t/2} ${o},${o+h/2 + bevel}`
   };
 
   const segs = {};
@@ -58,7 +74,7 @@ function createDigit() {
 
 function createColon() {
   const wrap = document.createElement('div');
-  wrap.className = 'separator';
+  wrap.className = 'separator'; wrap.id = 'sep-colon';
   const stack = document.createElement('div');
   stack.className = 'sep-colon';
   const t = document.createElement('div'); t.className = 'sep-circle';
@@ -67,38 +83,35 @@ function createColon() {
   wrap.appendChild(stack);
   return wrap;
 }
-function createHundredths00() {
-  // Render ".00" as two round LEDs: ':' already added, here we add dot and two zero digits
-  const wrap = document.createDocumentFragment();
-  // dot
-  const dotWrap = document.createElement('div');
-  dotWrap.className = 'sep-dot';
-  const dot = document.createElement('div');
-  dot.className = 'dot-rect';
-  dotWrap.appendChild(dot);
-  wrap.appendChild(dotWrap);
-
-  // two seven-seg zeros
-  const h1 = createDigit(); const h2 = createDigit();
-  h1._set('0'); h2._set('0');
-  wrap.appendChild(h1); wrap.appendChild(h2);
+function createDot() {
+  const wrap = document.createElement('div');
+  wrap.className = 'separator'; wrap.id = 'sep-dot';
+  const stack = document.createElement('div');
+  stack.className = 'sep-dot';
+  const dot = document.createElement('div'); dot.className = 'dot-rect';
+  stack.appendChild(dot);
+  wrap.appendChild(stack);
   return wrap;
 }
 
 const digits = [];
-let colonEl = null;
+let sepColonEl = null;
+let sepDotEl = null;
 function buildDisplay() {
   screen.innerHTML = '';
   const m1 = createDigit(); const m2 = createDigit();
   const s1 = createDigit(); const s2 = createDigit();
-  digits.splice(0, digits.length, m1, m2, s1, s2);
+  const h1 = createDigit(); const h2 = createDigit();
+  digits.splice(0, digits.length, m1, m2, s1, s2, h1, h2);
 
-  colonEl = createColon();
+  sepColonEl = createColon();
+  sepDotEl = createDot();
 
   screen.appendChild(m1); screen.appendChild(m2);
-  screen.appendChild(colonEl);
+  screen.appendChild(sepColonEl);
   screen.appendChild(s1); screen.appendChild(s2);
-  screen.appendChild(createHundredths00());
+  screen.appendChild(sepDotEl);
+  screen.appendChild(h1); screen.appendChild(h2);
 }
 buildDisplay();
 
@@ -118,12 +131,14 @@ function remainingMs() {
 }
 
 function updateDisplayFromMs(ms) {
+  const hundredths = Math.floor((ms % 1000) / 10);
   const totalSeconds = Math.floor(ms / 1000);
   const seconds = totalSeconds % 60;
   const minutes = Math.floor(totalSeconds / 60);
+
   renderTwoDigits(minutes, digits[0], digits[1]);
   renderTwoDigits(seconds, digits[2], digits[3]);
-  // hundredths are always .00 visually (static)
+  renderTwoDigits(hundredths, digits[4], digits[5]);
 }
 
 function loop() {
@@ -141,12 +156,16 @@ function loop() {
 function getTotalMsFromInputs() {
   let m = parseInt(inputMinutes.value, 10);
   let s = parseInt(inputSeconds.value, 10);
+  let h = parseInt(inputHundredths.value, 10);
   if (isNaN(m) || m < 0) m = 0;
   if (isNaN(s) || s < 0) s = 0;
+  if (isNaN(h) || h < 0) h = 0;
   s = Math.min(s, 59);
+  h = Math.min(h, 99);
   inputMinutes.value = String(m).padStart(2,'0');
   inputSeconds.value = String(s).padStart(2,'0');
-  return m*60_000 + s*1_000;
+  inputHundredths.value = String(h).padStart(2,'0');
+  return m*60_000 + s*1_000 + h*10;
 }
 
 function start() {
@@ -177,6 +196,48 @@ function reset() {
   updateDisplayFromMs(total);
 }
 
+/* Unit visibility toggles */
+function updateUnitVisibility() {
+  const showM = toggleMinutes.checked;
+  const showS = toggleSeconds.checked;
+  const showH = toggleHundredths.checked;
+
+  digits[0].style.display = showM ? '' : 'none';
+  digits[1].style.display = showM ? '' : 'none';
+
+  sepColonEl.style.display = (showM && showS) ? '' : 'none';
+
+  digits[2].style.display = showS ? '' : 'none';
+  digits[3].style.display = showS ? '' : 'none';
+
+  sepDotEl.style.display = (showS && showH) ? '' : 'none';
+
+  digits[4].style.display = showH ? '' : 'none';
+  digits[5].style.display = showH ? '' : 'none';
+}
+
+toggleMinutes.addEventListener('change', updateUnitVisibility);
+toggleSeconds.addEventListener('change', updateUnitVisibility);
+toggleHundredths.addEventListener('change', updateUnitVisibility);
+
+/* Minutes-to-21:45 badge — always running */
+function nextTarget2145() {
+  const now = new Date();
+  const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 21, 45, 0, 0);
+  if (now.getTime() >= t.getTime()) t.setDate(t.getDate() + 1);
+  return t;
+}
+let badgeTarget = nextTarget2145();
+function updateBadge() {
+  const now = Date.now();
+  let diff = badgeTarget.getTime() - now;
+  if (diff <= 0) { badgeTarget = nextTarget2145(); diff = badgeTarget.getTime() - now; }
+  const mins = Math.max(0, Math.floor(diff / 60000));
+  badgeMinsVal.textContent = String(mins);
+}
+setInterval(updateBadge, 1000);
+updateBadge();
+
 btnStart.addEventListener('click', () => start());
 btnPause.addEventListener('click', () => pause());
 btnReset.addEventListener('click', () => reset());
@@ -186,5 +247,6 @@ window.addEventListener('keydown', (e) => {
   if (e.key.toLowerCase() === 'r') { e.preventDefault(); reset(); }
 });
 
-// Initialize display from default inputs
+// Initialize
 updateDisplayFromMs(getTotalMsFromInputs());
+updateUnitVisibility();

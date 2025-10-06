@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Countdown — Fullscreen LED (mm:ss:00)</title>
+  <title>Countdown — Fullscreen LED (toggles + 21:45 badge)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
@@ -11,6 +11,15 @@
 </head>
 <body>
   <div class="stage">
+    <!-- Top-left minutes-to-21:45 badge (≈10% size of main clock) -->
+    <aside class="deadline-badge" aria-live="polite">
+      <div class="badge-line">
+        <span class="badge-label">Tot</span>
+        <span class="badge-time">21:45</span>
+      </div>
+      <div class="badge-mins"><span id="badge-mins-val">--</span> min</div>
+    </aside>
+
     <main class="shell" role="application">
       <section class="panel display" aria-live="polite" aria-atomic="true">
         <div id="screen" class="screen" aria-label="Countdown weergave">
@@ -28,7 +37,18 @@
             <span>Seconden</span>
             <input id="input-seconds" type="number" min="0" max="59" step="1" value="00" inputmode="numeric" />
           </label>
+          <label class="field">
+            <span>Honderdsten</span>
+            <input id="input-hundredths" type="number" min="0" max="99" step="1" value="00" inputmode="numeric" />
+          </label>
         </div>
+
+        <div class="group toggles" role="group" aria-label="Eenheden tonen/verbergen">
+          <label class="switch"><input id="toggle-minutes" type="checkbox" checked> <span>Minuten tonen</span></label>
+          <label class="switch"><input id="toggle-seconds" type="checkbox" checked> <span>Seconden tonen</span></label>
+          <label class="switch"><input id="toggle-hundredths" type="checkbox" checked> <span>Honderdsten tonen</span></label>
+        </div>
+
         <div class="group cta">
           <button id="btn-start" class="btn primary">Start</button>
           <button id="btn-pause" class="btn">Pauze</button>

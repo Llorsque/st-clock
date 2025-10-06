@@ -1,17 +1,12 @@
-# Countdown Timer (Fullscreen 16:9) — mm:ss:00 (grote rode LED digits)
+# Countdown Timer (16:9) — dikke segmenten + toggles + 21:45-minutenbadge
 
-**Kenmerken**
-- Enorm grote cijfers die de hele pagina benutten (16:9 canvas).
-- Stijl: vlakke **rode** seven‑segment digits zoals op de referentieklok.
-- Weergave **mm:ss:00** (honderdsten vast op 00; focus op leesbare minuten/seconden).
-- Start · Pauze · Reset en inputs voor minuten/seconden.
+- **Schaal:** netjes passend in 16:9, niet te groot.
+- **Stijl:** vlak **rood**, **dikkere** seven‑segmenten (zoals je referentie).
+- **Toggles:** minuten / seconden / honderdsten zichtbaar of onzichtbaar — scheidingstekens passen automatisch.
+- **Badge:** linksboven (ongeveer 10% van de hoofdklok) toont **minuten tot 21:45**, loopt altijd door en springt naar morgen als 21:45 bereikt is.
+- **Bediening:** Start · Pauze · Reset (Spatie = start/pauze, R = reset).
 
-**Gebruik**
-1. Plaats de bestanden in je GitHub-repo en open `index.html` (of activeer Pages).
-2. Stel minuten/seconden in en druk **Start**.
-
-**Techniek**
-- Nauwkeurige timing (`performance.now()` + `requestAnimationFrame`).
-- Digits met SVG-polygons (afgeschuinde segment-uiteinden).
+## Gebruik
+Unzip in je repo en open `index.html`. Stel tijd in; vink eenheden aan/uit naar wens.
 
 MIT-licentie.
