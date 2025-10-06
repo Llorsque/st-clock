@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Countdown — 16:9 LED</title>
+  <title>Countdown — Fullscreen LED (mm:ss:00)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
@@ -11,43 +11,24 @@
 </head>
 <body>
   <div class="stage">
-    <!-- Top-left minutes-to-21:45 badge -->
-    <aside class="deadline-badge" aria-live="polite">
-      <div class="badge-line">
-        <span class="badge-label">Tot</span>
-        <span class="badge-time">21:45</span>
-      </div>
-      <div class="badge-mins"><span id="badge-mins-val">--</span> min</div>
-    </aside>
-
     <main class="shell" role="application">
-      <header class="bar">
-        <h1 class="brand">Countdown</h1>
-        <div class="brand-dot" aria-hidden="true"></div>
-      </header>
+      <section class="panel display" aria-live="polite" aria-atomic="true">
+        <div id="screen" class="screen" aria-label="Countdown weergave">
+          <!-- Digits injected by app.js -->
+        </div>
+      </section>
 
       <section class="panel controls">
         <div class="group time-inputs" role="group" aria-label="Tijd instellen">
           <label class="field">
             <span>Minuten</span>
-            <input id="input-minutes" type="number" min="0" max="999" step="1" value="01" inputmode="numeric" />
+            <input id="input-minutes" type="number" min="0" max="999" step="1" value="05" inputmode="numeric" />
           </label>
           <label class="field">
             <span>Seconden</span>
             <input id="input-seconds" type="number" min="0" max="59" step="1" value="00" inputmode="numeric" />
           </label>
-          <label class="field">
-            <span>Honderdsten</span>
-            <input id="input-hundredths" type="number" min="0" max="99" step="1" value="00" inputmode="numeric" />
-          </label>
         </div>
-
-        <div class="group toggles" role="group" aria-label="Eenheden tonen/verbergen">
-          <label class="switch"><input id="toggle-minutes" type="checkbox" checked> <span>Minuten tonen</span></label>
-          <label class="switch"><input id="toggle-seconds" type="checkbox" checked> <span>Seconden tonen</span></label>
-          <label class="switch"><input id="toggle-hundredths" type="checkbox" checked> <span>Honderdsten tonen</span></label>
-        </div>
-
         <div class="group cta">
           <button id="btn-start" class="btn primary">Start</button>
           <button id="btn-pause" class="btn">Pauze</button>
@@ -55,16 +36,6 @@
         </div>
         <p class="hint">Spatie = Start/Pauze · R = Reset</p>
       </section>
-
-      <section class="panel display" aria-live="polite" aria-atomic="true">
-        <div id="screen" class="screen" aria-label="Countdown weergave">
-          <!-- Digits are injected by app.js -->
-        </div>
-      </section>
-
-      <footer class="bar foot">
-        <p>16:9 canvas · LED rood display · Minuten-badge tot 21:45</p>
-      </footer>
     </main>
   </div>
 
