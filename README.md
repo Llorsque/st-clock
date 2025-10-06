@@ -1,9 +1,14 @@
-# Countdown Timer (16:9) — triangular LED digits + toggles + 21:45-minutenbadge
+# Countdown Timer (16:9) — smooth triangular digits + grote 21:45-badge + reset
 
-- **Cijferstijl:** altijd de driehoekige/dikke zeven-segment look zoals je voorbeeld (vlakke rode vlakken, scherpe schuin afgekante uiteinden).
-- **Hoofdklok:** schaalt in 16:9; extreem groot en centraal.
-- **Links-boven klok:** badge toont **minuten tot 21:45** en is **50% van de hoofdklok** (geschaald). Loopt continu door.
-- **Toggles:** minuten / seconden / honderdsten aan/uit; scheidingstekens passen mee aan.
-- **Bediening:** Start · Pauze · Reset (Spatie = start/pauze, R = reset).
+**Wat is nieuw**
+- **Egalere randen**: segmenten opnieuw opgebouwd met consistente, driehoekige uiteinden (geen rare hoekjes of kieren). `shape-rendering: geometricPrecision` voor strakke randen.
+- **Grotere 21:45‑timer** linksboven: nu ~**80%** van de hoofdklok‑schaal.
+- **Reset pagina**-knop: zet alles terug naar een schone start (volledige reload).
+- **Toggles** blijven werken (minuten/seconden/honderdsten).
 
-Plaats de bestanden in je repo en open `index.html`. MIT-licentie.
+**Gebruik**
+- `Start`, `Pauze`, `Reset` voor de countdown.
+- `Reset pagina` voor een volledige herstart.
+- Badge toont minuten tot 21:45 en springt automatisch naar morgen na 21:45.
+
+MIT‑licentie.

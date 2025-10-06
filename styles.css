@@ -1,4 +1,4 @@
-/* 16:9; triangular red digits like example; badge at 50% of main */
+/* 16:9; smooth triangular red digits; bigger 21:45 badge; full page reset */
 :root{
   --bg:#000;
   --panel:#060606;
@@ -6,7 +6,7 @@
   --ink:#d6d6d6;
   --muted:#8a8a8a;
   --led-red:#ff2e2e;
-  --led-dim:#1b0404;
+  --led-dim:#1a0303;
   --digit-h: clamp(200px, 50vmin, 64vmin);
   --gap: clamp(10px, 4.2vmin, 34px);
 }
@@ -52,6 +52,7 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
 }
 .btn.primary{ background:#151515; border-color:#252525; }
 .btn.ghost{ background:transparent; }
+.btn.danger{ background:#220b0b; border-color:#3a0f0f; }
 
 /* SCREEN and DIGITS */
 .screen{
@@ -60,10 +61,16 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
   gap: var(--gap);
   padding: clamp(8px, 3vmin, 24px);
 }
-.digit{ height: var(--digit-h); width:auto; }
+.digit{
+  height: var(--digit-h); width:auto;
+  shape-rendering: geometricPrecision;
+}
 
-/* Triangular thick segments (flat red) */
-.segment{ fill: var(--led-dim); transition: fill .06s linear; }
+/* Smooth triangular segments (no micro gaps) */
+.segment{
+  fill: var(--led-dim);
+  transition: fill .06s linear;
+}
 .segment.lit{ fill: var(--led-red); }
 
 .separator{ display:grid; place-items:center; }
@@ -82,14 +89,14 @@ body{ margin:0; font-family:'Archivo', system-ui, -apple-system, Segoe UI, Robot
   border-radius:50%; background: var(--led-red);
 }
 
-/* Badge at 50% of main (scaled) */
+/* Bigger badge (left/top) */
 .deadline-badge{
   position:fixed; top:10px; left:10px; z-index:5;
-  padding:10px 12px; background:#050505; border:1px solid #1a1a1a; border-radius:10px;
+  padding:12px 14px; background:#050505; border:1px solid #1a1a1a; border-radius:10px;
   color:#ffbcbc; user-select:none;
   transform-origin: top left;
-  transform: scale(0.50);
+  transform: scale(0.80); /* was 0.50 -> bigger */
 }
-.badge-line{ display:flex; gap:6px; align-items:center; font-size:64px; color:#ff8f8f; }
+.badge-line{ display:flex; gap:10px; align-items:center; font-size:80px; color:#ff8f8f; }
 .badge-time{ font-weight:800; letter-spacing:.5px; }
-.badge-mins{ font-weight:800; font-size:92px; letter-spacing:.5px; color:#ff2e2e; }
+.badge-mins{ font-weight:800; font-size:112px; letter-spacing:.5px; color:#ff2e2e; }

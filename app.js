@@ -1,4 +1,4 @@
-// LED countdown — triangular segments; unit toggles; 21:45 minutes badge @ 50%
+// LED countdown — smooth triangular segments; unit toggles; big 21:45 minutes badge
 const screen = document.getElementById('screen');
 const inputMinutes = document.getElementById('input-minutes');
 const inputSeconds = document.getElementById('input-seconds');
@@ -6,6 +6,7 @@ const inputHundredths = document.getElementById('input-hundredths');
 const btnStart = document.getElementById('btn-start');
 const btnPause = document.getElementById('btn-pause');
 const btnReset = document.getElementById('btn-reset');
+const btnHardReset = document.getElementById('btn-hardreset');
 
 const toggleMinutes = document.getElementById('toggle-minutes');
 const toggleSeconds = document.getElementById('toggle-seconds');
@@ -26,40 +27,39 @@ const SEGMENTS = {
   '9': [1,1,1,1,0,1,1],
 };
 
-/* Triangular thick segment geometry (with sharp diagonal ends) */
+/* Smooth triangular segment geometry builder */
 function createDigit() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox','0 0 140 220');
   svg.classList.add('digit');
 
   const t = 34;   // thickness
-  const o = 12;   // margin
+  const o = 14;   // margin
   const W = 140 - 2*o;
   const H = 220 - 2*o;
   const mid = o + H/2;
-  const b = 18;   // bevel length
+  const b = 22;   // bevel length (consistent ends)
+
+  // Helper to make a horizontal bar polygon with triangular ends
+  const hbar = (y) => `${o+b},${y} ${o+W-b},${y} ${o+W-b-t/2},${y+t} ${o+b+t/2},${y+t}`;
+  // Helper to make a vertical bar polygon with triangular ends
+  const vbar = (x, y1, y2) => `${x},${y1+b} ${x+t},${y1} ${x+t},${y2-b} ${x},${y2}`;
 
   const polys = {
-    // top horizontal (a)
-    a: `${o+b},${o} ${o+W-b},${o} ${o+W-b-t/2},${o+t} ${o+b+t/2},${o+t}`,
-    // middle horizontal (g)
-    g: `${o+b},${mid - t/2} ${o+W-b},${mid - t/2} ${o+W-b-t/2},${mid + t/2} ${o+b+t/2},${mid + t/2}`,
-    // bottom horizontal (d)
-    d: `${o+b},${o+H-t} ${o+W-b},${o+H-t} ${o+W-b-t/2},${o+H} ${o+b+t/2},${o+H}`,
-    // top-right vertical (b)
-    b: `${o+W-t},${o+b} ${o+W},${o+b+t/2} ${o+W},${mid-b} ${o+W-t},${mid-b-t/2}`,
-    // bottom-right vertical (c)
-    c: `${o+W-t},${mid+b+t/2} ${o+W},${mid+b} ${o+W},${o+H-b-t/2} ${o+W-t},${o+H-b}`,
-    // top-left vertical (f)
-    f: `${o},${o+b+t/2} ${o+t},${o+b} ${o+t},${mid-b-t/2} ${o},${mid-b}`,
-    // bottom-left vertical (e)
-    e: `${o},${mid+b} ${o+t},${mid+b+t/2} ${o+t},${o+H-b} ${o},${o+H-b-t/2}`
+    a: hbar(o),
+    g: hbar(mid - t/2),
+    d: hbar(o+H-t),
+    b: vbar(o+W-t, o, mid),
+    c: vbar(o+W-t, mid, o+H),
+    f: vbar(o, o, mid),
+    e: vbar(o, mid, o+H)
   };
 
   const segs = {};
   Object.entries(polys).forEach(([key, points]) => {
     const p = document.createElementNS('http://www.w3.org/2000/svg','polygon');
     p.setAttribute('points', points);
+    p.setAttribute('vector-effect', 'non-scaling-stroke');
     p.classList.add('segment');
     svg.appendChild(p);
     segs[key] = p;
@@ -74,7 +74,7 @@ function createDigit() {
       else segs[k].classList.remove('lit');
     });
   };
-  svg._set('8'); // initialize 'all on' style
+  svg._set('8'); // show full segment shape initially
   return svg;
 }
 
@@ -239,6 +239,12 @@ function updateBadge() {
 }
 setInterval(updateBadge, 1000);
 updateBadge();
+
+/* Full page reset */
+btnHardReset.addEventListener('click', () => {
+  // Hard reload to ensure a clean state
+  location.reload();
+});
 
 btnStart.addEventListener('click', () => start());
 btnPause.addEventListener('click', () => pause());
