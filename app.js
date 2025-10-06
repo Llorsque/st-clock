@@ -1,6 +1,4 @@
-// Countdown Timer — Minuten:Seconden:Honderdsten
-// High-end seven-segment SVG renderer + precise timing loop based on performance.now()
-
+// Countdown Timer — 16:9 + LED rode digits
 const screen = document.getElementById('screen');
 const inputMinutes = document.getElementById('input-minutes');
 const inputSeconds = document.getElementById('input-seconds');
@@ -9,7 +7,6 @@ const btnStart = document.getElementById('btn-start');
 const btnPause = document.getElementById('btn-pause');
 const btnReset = document.getElementById('btn-reset');
 
-/** Seven-segment map (a,b,c,d,e,f,g) */
 const SEGMENTS = {
   '0': [1,1,1,1,1,1,0],
   '1': [0,1,1,0,0,0,0],
@@ -23,7 +20,6 @@ const SEGMENTS = {
   '9': [1,1,1,1,0,1,1],
 };
 
-/** Create a digit SVG element with seven segments */
 function createDigit() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox','0 0 110 180');
@@ -31,17 +27,16 @@ function createDigit() {
 
   const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
   const grad = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
-  grad.setAttribute('id','grad-cyan');
+  grad.setAttribute('id','grad-led');
   grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
   grad.setAttribute('x2','0%'); grad.setAttribute('y2','100%');
   const stop1 = document.createElementNS('http://www.w3.org/2000/svg','stop');
-  stop1.setAttribute('offset','0%'); stop1.setAttribute('stop-color','#eaffff');
+  stop1.setAttribute('offset','0%'); stop1.setAttribute('stop-color','#ffb3b3');
   const stop2 = document.createElementNS('http://www.w3.org/2000/svg','stop');
-  stop2.setAttribute('offset','100%'); stop2.setAttribute('stop-color','#a2f0f0');
+  stop2.setAttribute('offset','100%'); stop2.setAttribute('stop-color','#ff2d2e');
   grad.appendChild(stop1); grad.appendChild(stop2); defs.appendChild(grad);
   svg.appendChild(defs);
 
-  // coordinates for segments (slightly beveled)
   const polys = {
     a: "18,12 92,12 84,20 26,20",
     b: "92,12 98,18 98,86 90,94 84,86 84,20",
@@ -57,7 +52,6 @@ function createDigit() {
     const p = document.createElementNS('http://www.w3.org/2000/svg','polygon');
     p.setAttribute('points', points);
     p.classList.add('segment');
-    // add 'grad' class so lit segments use gradient fill
     p.classList.add('grad');
     svg.appendChild(p);
     segs[key] = p;
@@ -76,7 +70,6 @@ function createDigit() {
   return svg;
 }
 
-/** Create separators */
 function createColon() {
   const wrap = document.createElement('div');
   wrap.className = 'separator';
@@ -99,7 +92,6 @@ function createDot() {
   return wrap;
 }
 
-/** Build the live display: MM : SS . HH */
 const digits = [];
 function buildDisplay() {
   screen.innerHTML = '';
@@ -116,26 +108,22 @@ function buildDisplay() {
 }
 buildDisplay();
 
-/** Render a two-digit number into two seven-seg digits */
 function renderTwoDigits(value, d1, d2) {
   const str = String(value).padStart(2, '0');
   d1._set(str[0]); d2._set(str[1]);
 }
 
-/** State */
 let running = false;
 let endTimeMs = 0;
 let pauseRemaining = 0;
 let rafId = null;
 
-/** Calculate remaining from now */
 function remainingMs() {
   const now = performance.now();
   return Math.max(0, endTimeMs - now);
 }
 
 function updateDisplayFromMs(ms) {
-  // Round to nearest 10ms for display (hundredths)
   const hundredths = Math.floor((ms % 1000) / 10);
   const totalSeconds = Math.floor(ms / 1000);
   const seconds = totalSeconds % 60;
@@ -158,7 +146,6 @@ function loop() {
   rafId = requestAnimationFrame(loop);
 }
 
-/** Parse input values with clamping */
 function getTotalMsFromInputs() {
   let m = parseInt(inputMinutes.value, 10);
   let s = parseInt(inputSeconds.value, 10);
@@ -168,7 +155,6 @@ function getTotalMsFromInputs() {
   if (isNaN(h) || h < 0) h = 0;
   s = Math.min(s, 59);
   h = Math.min(h, 99);
-  // normalize displayed fields
   inputMinutes.value = String(m).padStart(2,'0');
   inputSeconds.value = String(s).padStart(2,'0');
   inputHundredths.value = String(h).padStart(2,'0');
@@ -207,11 +193,9 @@ btnStart.addEventListener('click', () => start());
 btnPause.addEventListener('click', () => pause());
 btnReset.addEventListener('click', () => reset());
 
-// Keyboard shortcuts
 window.addEventListener('keydown', (e) => {
   if (e.code === 'Space') { e.preventDefault(); running ? pause() : start(); }
   if (e.key.toLowerCase() === 'r') { e.preventDefault(); reset(); }
 });
 
-// Initialize display from default inputs
 updateDisplayFromMs(getTotalMsFromInputs());
